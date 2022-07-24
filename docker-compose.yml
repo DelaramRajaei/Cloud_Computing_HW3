@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  primary:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    hostname: primary
+    ports:
+      - "9870:9870"
+      - "9864:9864"
+      - "9000:9000"
+    volumes:
+      - ./volumes/ssh/id_rsa.pub:/id_rsa.pub
+      - ./volumes/datasets/:/datasets/
+      - ./volumes/code/:/code
+    networks:
+      - hadoop-network
+  worker-1:
+    build:
+      dockerfile: worker-Dockerfile
+      context: .
+    hostname: worker-1
+    ports:
+      - "8088:8088"
+      - "9865:9864"
+    volumes:
+      - ./volumes/ssh/id_rsa.pub:/id_rsa.pub
+      # - ./volumes/hadoop/:/hadoop/
+    networks:
+      - hadoop-network
+  worker-2:
+    build:
+      dockerfile: worker-Dockerfile
+      context: .
+    hostname: worker-2
+    ports:
+      - "8089:8088"
+      - "9866:9864"
+    volumes:
+      - ./volumes/ssh/id_rsa.pub:/id_rsa.pub
+      # - ./volumes/hadoop/:/hadoop/
+    networks:
+      - hadoop-network
+networks:
+  hadoop-network:
